@@ -22,7 +22,7 @@ environment:
 
 dependencies:
   bloc: ^7.0.0
-  flutter_bloc: ^7.0.1
+  flutter_bloc: ^7.1.0
   dartz: ^0.10.0-nullsafety.1
   equatable: ^2.0.0
   freezed_annotation: ^0.14.1
@@ -30,9 +30,9 @@ dependencies:
   injectable: ^1.4.0
 
   #Firebase
-  firebase_auth: ^1.1.4
-  firebase_core: ^1.1.1
-  google_sign_in: ^5.0.3
+  firebase_auth: ^3.0.2
+  firebase_core: ^1.5.0
+  google_sign_in: ^5.0.7
   
   #UI/UX
   filesize: ^2.0.1

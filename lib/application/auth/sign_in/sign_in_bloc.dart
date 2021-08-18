@@ -33,19 +33,40 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
           authFailureOrSuccessOption: none(),
         );
       },
-      registerWithEmailAndPasswordPressed: (e) async* {},
-      signInWithEmailAndPasswordPressed: (e) async* {},
-      signInWithGooglePressed: (e) async* {
-        yield state.copyWith(
-          isSubmitting: true,
-          authFailureOrSuccessOption: none(),
-        );
-        final failureOrSuccess = await _authFacade.signInWithGoogle();
+      signInWithEmailAndPasswordPressed: (e) async* {
+        Either<AuthFailure, Unit> failureOrSuccess = Right(unit);
+
+        final isEmailValid = state.emailAddress.isValid();
+        final isPasswordValid = state.password.isValid();
+
+        if (isEmailValid && isPasswordValid) {
+          yield state.copyWith(
+            isSubmitting: true,
+            authFailureOrSuccessOption: none(),
+          );
+
+          failureOrSuccess = await _authFacade.signInWithEmailAndPassword(
+            emailAddress: state.emailAddress,
+            password: state.password,
+          );
+        }
         yield state.copyWith(
           isSubmitting: false,
-          authFailureOrSuccessOption: some(failureOrSuccess),
+          showErrorMessages: AutovalidateMode.onUserInteraction,
+          authFailureOrSuccessOption: optionOf(failureOrSuccess),
         );
       },
+      // signInWithGooglePressed: (e) async* {
+      //   yield state.copyWith(
+      //     isSubmitting: true,
+      //     authFailureOrSuccessOption: none(),
+      //   );
+      //   final failureOrSuccess = await _authFacade.signInWithGoogle();
+      //   yield state.copyWith(
+      //     isSubmitting: false,
+      //     authFailureOrSuccessOption: some(failureOrSuccess),
+      //   );
+      // },
     );
   }
 
