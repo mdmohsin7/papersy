@@ -81,4 +81,26 @@ class FirebaseAuthFacade implements IAuthFacade {
       return left(const AuthFailure.serverError());
     }
   }
+
+  @override
+  Option<User> getSignedInUser() {
+    User user = _firebaseAuth.currentUser!;
+    return some(user);
+  }
+
+  @override
+  Future<Either<AuthFailure, Unit>> sendPasswordResetLink(
+      {required EmailAddress emailAddress}) async {
+    final emailAddressStr = emailAddress.getOrCrash();
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: emailAddressStr);
+      return right(unit);
+    } catch (e) {
+      if (e == "auth/invalid-email" || e == "auth/user-not-found") {
+        return left(const AuthFailure.invalidEmailOrUserDoesNotExist());
+      } else {
+        return left(const AuthFailure.serverError());
+      }
+    }
+  }
 }
